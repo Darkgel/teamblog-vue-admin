@@ -28,7 +28,7 @@ export const constantRouterMap = [
         hidden: true,
         children: [{
             path: 'home',
-            componenct: () => import('@/views/home/index')
+            component: () => import('@/views/home/index')
         }]
     },
 

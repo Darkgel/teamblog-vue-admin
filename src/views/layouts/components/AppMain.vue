@@ -1,27 +1,29 @@
 <template>
-    <el-main>
-        <el-table :data="tableData">
-            <el-table-column prop="date" label="日期" width="140">
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column>
-        </el-table>
-    </el-main>
+  <section class="app-main">
+    <transition name="fade-transform" mode="out-in">
+      <!-- or name="fade" -->
+      <!-- <router-view :key="key"></router-view> -->
+      <router-view/>
+    </transition>
+  </section>
 </template>
 
 <script>
 export default {
-    data () {
-        const item = {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-        }
-        return {
-            tableData: Array(20).fill(item)
-        }
+    name: 'AppMain',
+    computed: {
+    // key() {
+    //   return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
+    // }
     }
 }
 </script>
+
+<style scoped>
+.app-main {
+  /*50 = navbar  */
+  min-height: calc(100vh - 50px);
+  position: relative;
+  overflow: hidden;
+}
+</style>

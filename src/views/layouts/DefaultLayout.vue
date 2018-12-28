@@ -1,13 +1,4 @@
 <template>
-    <!-- <el-container>
-        <app-sidebar></app-sidebar>
-        <el-container direction="vertical">
-            <app-navbar></app-navbar>
-            <app-main></app-main>
-            <app-footer></app-footer>
-        </el-container>
-    </el-container> -->
-
     <div :class="classObj" class="app-wrapper">
         <app-sidebar class="sidebar-container"></app-sidebar>
         <div class="main-container">

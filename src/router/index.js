@@ -51,7 +51,7 @@ export const constantRouterMap = [
                 meta: { title: '创建文章', icon: '' }
             },
             {
-                path: 'edit',
+                path: 'edit/:id',
                 name: 'Article.Edit',
                 hidden: true,
                 component: () => import('@/views/article/Edit'),

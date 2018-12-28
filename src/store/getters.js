@@ -3,6 +3,7 @@ const getters = {
     avatar: state => state.user.avatar,
     name: state => state.user.name,
     roles: state => state.user.roles,
+    articles: state => state.data.articles,
     getArticleWithPagination: (state) => (query) => {
         let page = query.page || 1
         let pageSize = query.limit || 3

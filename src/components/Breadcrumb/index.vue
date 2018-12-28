@@ -19,6 +19,14 @@ export default {
             levelList: null
         }
     },
+    watch: {
+        $route () {
+            this.getBreadcrumb()
+        }
+    },
+    created () {
+        this.getBreadcrumb()
+    },
     methods: {
         getBreadcrumb () {
             let matched = this.$route.matched.filter(item => {

@@ -18,14 +18,14 @@ import AppFooter from './components/Footer'
 export default {
     name: 'DefaultLayout',
     components: { AppNavbar, AppSidebar, AppFooter, AppMain },
-    data () {
+    data() {
         return {}
     },
     computed: {
-        sidebar () {
+        sidebar() {
             return this.$store.state.app.sidebar
         },
-        classObj () {
+        classObj() {
             return {
                 hideSidebar: !this.sidebar.opened,
                 openSidebar: this.sidebar.opened

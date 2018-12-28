@@ -30,5 +30,6 @@ module.exports = {
         'max-len': ["error", {
             "code": 150,
         }],
+        'space-before-function-paren': ["error", "never"]
     }
 }

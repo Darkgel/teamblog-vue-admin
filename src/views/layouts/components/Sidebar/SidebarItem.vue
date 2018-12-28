@@ -57,13 +57,13 @@ export default {
             default: ''
         }
     },
-    data () {
+    data() {
         return {
             onlyOneChild: null
         }
     },
     methods: {
-        hasOneShowingChild (children, parent) {
+        hasOneShowingChild(children, parent) {
             const showingChildren = children.filter(item => {
                 if (item.hidden) {
                     return false
@@ -87,13 +87,13 @@ export default {
 
             return false
         },
-        resolvePath (routePath) {
+        resolvePath(routePath) {
             if (this.isExternalLink(routePath)) {
                 return routePath
             }
             return path.resolve(this.basePath, routePath)
         },
-        isExternalLink (routePath) {
+        isExternalLink(routePath) {
             return isExternal(routePath)
         }
     }

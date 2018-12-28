@@ -33,22 +33,29 @@ export const constantRouterMap = [
     },
 
     {
-        path: '/example',
+        path: '/article',
         component: DefaultLayout,
-        redirect: '/example/table',
-        meta: { title: 'Example', icon: 'el-icon-menu' },
+        redirect: '/article/list',
+        meta: { title: '文章管理', icon: 'el-icon-document' },
         children: [
             {
-                path: 'table',
-                name: 'Table',
-                component: () => import('@/views/table/index'),
-                meta: { title: 'Table', icon: '' }
+                path: 'list',
+                name: 'Article.List',
+                component: () => import('@/views/article/List'),
+                meta: { title: '文章列表', icon: '' }
             },
             {
-                path: 'tree',
-                name: 'Tree',
-                components: () => import('@/views/tree/index'),
-                meta: { title: 'Tree', icon: 'tree' }
+                path: 'creation',
+                name: 'Article.Creation',
+                component: () => import('@/views/article/Creation'),
+                meta: { title: '创建文章', icon: '' }
+            },
+            {
+                path: 'edit',
+                name: 'Article.Edit',
+                hidden: true,
+                component: () => import('@/views/article/Edit'),
+                meta: { title: '编辑文章', icon: '' }
             }
         ]
     },
@@ -59,8 +66,7 @@ export const constantRouterMap = [
         redirect: '/nested/menu1',
         name: 'Nested',
         meta: {
-            title: 'Nested',
-            icon: 'nested'
+            title: 'Nested'
         },
         children: [
             {

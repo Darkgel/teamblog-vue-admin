@@ -31,7 +31,7 @@ export default {
         Breadcrumb,
         Hamburger
     },
-    data () {
+    data() {
         return {}
     },
     computed: {
@@ -41,10 +41,10 @@ export default {
         ])
     },
     methods: {
-        toggleSideBar () {
+        toggleSideBar() {
             this.$store.dispatch('ToggleSidebar')
         },
-        logout () {
+        logout() {
             alert('log out')
             // this.$store.dispatch('LogOut').then(() => {
             //     location.reload() // 为了重新实例化vue-router对象 避免bug

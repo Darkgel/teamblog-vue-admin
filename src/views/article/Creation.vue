@@ -1,11 +1,11 @@
 <template>
-    <div>文章创建页</div>
+  <article-detail :is-edit="false"/>
 </template>
 
 <script>
+import ArticleDetail from './Detail'
+
 export default {
-    data() {
-        return {}
-    }
+    components: { ArticleDetail }
 }
 </script>

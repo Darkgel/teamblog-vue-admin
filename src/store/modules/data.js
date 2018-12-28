@@ -8,8 +8,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 1',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 2
             },
             {
@@ -19,8 +19,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 2',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 0
             },
             {
@@ -30,8 +30,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 3',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 1
             },
             {
@@ -41,8 +41,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 4',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 2
             },
             {
@@ -52,8 +52,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 5',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 0
             },
             {
@@ -63,8 +63,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 6',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 1
             },
             {
@@ -74,8 +74,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 7',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 2
             },
             {
@@ -85,8 +85,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 8',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 0
             },
             {
@@ -96,8 +96,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 9',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 1
             },
             {
@@ -107,8 +107,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 10',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 2
             },
             {
@@ -118,8 +118,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 11',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 0
             },
             {
@@ -129,8 +129,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 12',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 1
             },
             {
@@ -140,8 +140,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 13',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 2
             },
             {
@@ -151,8 +151,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 14',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 0
             },
             {
@@ -162,8 +162,8 @@ const data = {
                 updatedTime: 1545982570,
                 createdTime: 1545982533,
                 summary: 'this is the summary of article 15',
-                content_md: '',
-                content_html: '',
+                contentMd: '',
+                contentHtml: '',
                 status: 1
             }
         ]

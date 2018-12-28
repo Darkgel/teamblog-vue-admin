@@ -40,7 +40,7 @@
                 </el-form-item>
 
                 <el-form-item prop="content" style="margin-bottom: 30px;">
-                    <el-input :rows="30" v-model="postForm.content_md" type="textarea" class="article-textarea" autosize placeholder="请输入内容"/>
+                    <markdown-editor v-model="postForm.contentMd" height="300px"/>
                 </el-form-item>
             </div>
         </el-form>
@@ -50,6 +50,7 @@
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import MDinput from '@/components/MDinput'
+import MarkdownEditor from '@/components/MarkdownEditor'
 
 const defaultForm = {
     id: undefined,
@@ -58,13 +59,13 @@ const defaultForm = {
     updatedTime: undefined,
     createdTime: undefined,
     summary: '',
-    content_md: '',
-    content_html: '',
+    contentMd: '',
+    contentHtml: '',
     status: ''
 }
 
 export default {
-    components: { Sticky, MDinput },
+    components: { Sticky, MDinput, MarkdownEditor },
     props: {
         isEdit: {
             type: Boolean,

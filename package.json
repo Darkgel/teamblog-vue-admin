@@ -11,10 +11,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "codemirror": "^5.42.2",
     "element-ui": "^2.4.11",
     "js-cookie": "^2.2.0",
     "normalize.css": "^8.0.1",
     "path-to-regexp": "^2.4.0",
+    "tui-editor": "^1.2.10",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

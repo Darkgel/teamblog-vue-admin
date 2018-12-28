@@ -9,7 +9,7 @@
 
             <el-table-column align="center" label="Date">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+                    <span>{{ scope.row.updatedTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
                 </template>
             </el-table-column>
 
@@ -19,9 +19,9 @@
                 </template>
             </el-table-column>
 
-            <el-table-column class-name="status-col" label="Status">
+            <el-table-column align="center" class-name="status-col" label="Status">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+                    <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status | statusStringMapping }}</el-tag>
                 </template>
             </el-table-column>
 
@@ -51,14 +51,21 @@
 import Pagination from '@/components/Pagination'
 
 export default {
-    name: 'ArticleList',
     components: { Pagination },
     filters: {
         statusFilter(status) {
             const statusMap = {
-                published: 'success',
-                draft: 'info',
-                deleted: 'danger'
+                2: 'success',
+                1: 'info',
+                0: 'danger'
+            }
+            return statusMap[status] || ''
+        },
+        statusStringMapping(status) {
+            const statusMap = {
+                2: 'published',
+                1: 'draft',
+                0: 'deleted'
             }
             return statusMap[status] || ''
         }
@@ -69,7 +76,7 @@ export default {
             total: 0,
             listQuery: {
                 page: 1,
-                limit: 20
+                limit: 10
             }
         }
     },
@@ -78,25 +85,12 @@ export default {
     },
     methods: {
         getList() {
-            this.list = [
-                {
-                    id: 1,
-                    timestamp: 1545982570,
-                    author: 'Darkgel_1',
-                    status: 'published',
-                    title: 'article title one'
-                }
-            ]
-            this.total = 200
+            let response = this.$store.getters.getArticleWithPagination(this.listQuery)
+            this.total = response.total
+            this.list = response.list
+            this.listQuery.page = response.page
+            this.listQuery.limit = response.pageSize
         }
-        // handleSizeChange(val) {
-        //     this.listQuery.limit = val
-        //     this.getList()
-        // },
-        // handleCurrentChange(val) {
-        //     this.listQuery.page = val
-        //     this.getList()
-        // }
     }
 }
 </script>

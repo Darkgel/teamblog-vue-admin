@@ -1,11 +1,11 @@
 <template>
-    <div>edit</div>
+  <article-item :is-edit="true"/>
 </template>
 
 <script>
+import ArticleItem from './components/Detail'
+
 export default {
-    data() {
-        return {}
-    }
+    components: { ArticleItem }
 }
 </script>

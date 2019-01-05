@@ -34,6 +34,8 @@ service.interceptors.response.use(
         const msg = res.msg
         const content = res.content
 
+        console.log(response)
+
         if (code !== 0) {
             Message({
                 message: msg,

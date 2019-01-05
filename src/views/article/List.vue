@@ -109,9 +109,9 @@ export default {
     },
     methods: {
         getList() {
-            fetchList(this.listQuery).then(content => {
-                this.list = content.data
-                this.total = content.meta.pagination.total
+            fetchList(this.listQuery).then(response => {
+                this.list = response.data
+                this.total = response.meta.pagination.total
             })
         },
         handleSizeChange(val) {

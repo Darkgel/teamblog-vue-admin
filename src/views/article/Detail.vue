@@ -3,8 +3,8 @@
         <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
             <sticky>
                 <div style="background-color: lightgrey;text-align: right;padding: 10px 50px">
-                    <el-button type="success" @click="submitForm">发布</el-button>
-                    <el-button type="warning" @click="draftForm">草稿</el-button>
+                    <el-button type="success" @click="publish">发布</el-button>
+                    <el-button type="warning" @click="saveAsDraft">草稿</el-button>
                 </div>
             </sticky>
 
@@ -24,11 +24,6 @@
                                         <el-input v-model="postForm.author" placeholder="作者称呼"/>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="10">
-                                    <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                                        <el-date-picker v-model="postForm.updateTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"/>
-                                    </el-form-item>
-                                </el-col>
                             </el-row>
                         </div>
                     </el-col>
@@ -40,7 +35,7 @@
                 </el-form-item>
 
                 <el-form-item prop="content" style="margin-bottom: 30px;">
-                    <markdown-editor v-model="postForm.contentMd" height="300px"/>
+                    <markdown-editor ref="markdownEditor" v-model="postForm.contentMd" height="800px"/>
                 </el-form-item>
             </div>
         </el-form>
@@ -51,17 +46,21 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import MDinput from '@/components/MDinput'
 import MarkdownEditor from '@/components/MarkdownEditor'
+import { getArticle, saveArticle } from '@/api/blog/articles'
+
+const articleStatus = {
+    draft: 0,
+    published: 1
+}
 
 const defaultForm = {
     id: undefined,
     title: '',
     author: '',
-    updatedTime: undefined,
-    createdTime: undefined,
     summary: '',
     contentMd: '',
     contentHtml: '',
-    status: ''
+    status: articleStatus.draft
 }
 
 export default {
@@ -107,32 +106,33 @@ export default {
     },
     methods: {
         fetchData(id) {
-            let articles = this.$store.getters.articles
-            let index = articles.findIndex(function(element) {
-                return element.id === id
+            getArticle(id).then(content => {
+                let article = content.data
+                for (let key in this.postForm) {
+                    this.postForm[key] = article[key]
+                }
             })
-            let article = articles.slice(index, index + 1)[0]
-            this.postForm = article
         },
-        submitForm() {
-            console.log(this.postForm)
+        publish() {
             this.$refs.postForm.validate(valid => {
                 if (valid) {
-                    this.loading = true
-                    this.$notify({
-                        title: '成功',
-                        message: '发布文章成功',
-                        type: 'success',
-                        duration: 2000
+                    this.postForm.contentHtml = this.$refs.markdownEditor.getHtml()
+                    this.postForm.status = articleStatus.published
+                    saveArticle(this.postForm).then(content => {
+                        this.$notify({
+                            title: '成功',
+                            message: '发布文章成功',
+                            type: 'success',
+                            duration: 2000
+                        })
                     })
-                    this.postForm.status = 'published'
                 } else {
                     console.log('error submit!!')
                     return false
                 }
             })
         },
-        draftForm() {
+        saveAsDraft() {
             if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
                 this.$message({
                     message: '请填写必要的标题和内容',
@@ -140,13 +140,16 @@ export default {
                 })
                 return
             }
-            this.$message({
-                message: '保存成功',
-                type: 'success',
-                showClose: true,
-                duration: 1000
+            this.postForm.contentHtml = this.$refs.markdownEditor.getHtml()
+            this.postForm.status = articleStatus.draft
+            saveArticle(this.postForm).then(content => {
+                this.$notify({
+                    title: '成功',
+                    message: '发布文章成功',
+                    type: 'success',
+                    duration: 2000
+                })
             })
-            this.postForm.status = 'draft'
         }
     }
 }
@@ -170,7 +173,7 @@ export default {
     .word-counter {
         width: 40px;
         position: absolute;
-        right: -10px;
+        right: -3px;
         top: 0px;
     }
 }

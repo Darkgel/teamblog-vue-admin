@@ -9,7 +9,7 @@
 
             <el-table-column align="center" label="Date">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.updatedTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+                    <span>{{ scope.row.updatedAt | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
                 </template>
             </el-table-column>
 
@@ -21,7 +21,7 @@
 
             <el-table-column align="center" class-name="status-col" label="Status">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status | statusStringMapping }}</el-tag>
+                    <el-tag :type="scope.row.status | statusTypeMapping(scope.row.deletedAt)">{{ scope.row.status | statusStringMapping(scope.row.deletedAt) }}</el-tag>
                 </template>
             </el-table-column>
 
@@ -39,35 +39,52 @@
                         <el-button type="primary" size="small" icon="el-icon-edit">Edit</el-button>
                     </router-link>
 
-                    <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDeletion()">Delete</el-button>
+                    <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDeletion(scope.row.id)">Delete</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="getList" />
     </div>
 </template>
 
 <script>
+import { fetchList, deleteArticle } from '@/api/blog/articles'
 import Pagination from '@/components/Pagination'
+const articleStatus = {
+    draft: 0,
+    published: 1
+}
 
 export default {
     components: { Pagination },
     filters: {
-        statusFilter(status) {
-            const statusMap = {
-                2: 'success',
-                1: 'info',
-                0: 'danger'
+        statusTypeMapping: function(status, deletedAt) {
+            let type = 'info'
+            if (deletedAt !== null) {
+                type = 'danger'
+            } else {
+                switch (status) {
+                case articleStatus.draft :
+                    type = 'info'; break
+                case articleStatus.published :
+                    type = 'success'; break
+                }
             }
-            return statusMap[status] || ''
+            return type
         },
-        statusStringMapping(status) {
-            const statusMap = {
-                2: 'published',
-                1: 'draft',
-                0: 'deleted'
+        statusStringMapping: function(status, deletedAt) {
+            let string = 'draft'
+            if (deletedAt !== null) {
+                string = 'deleted'
+            } else {
+                switch (status) {
+                case articleStatus.draft :
+                    string = 'draft'; break
+                case articleStatus.published :
+                    string = 'published'; break
+                }
             }
-            return statusMap[status] || ''
+            return string
         }
     },
     data() {
@@ -75,8 +92,15 @@ export default {
             list: null,
             total: 0,
             listQuery: {
-                page: 1,
-                limit: 10
+                pageNum: 1,
+                pageSize: 10,
+                withDeleted: 1
+            },
+            constant: {
+                articleStatus: {
+                    draft: 0,
+                    published: 1
+                }
             }
         }
     },
@@ -85,11 +109,26 @@ export default {
     },
     methods: {
         getList() {
-            let response = this.$store.getters.getArticleWithPagination(this.listQuery)
-            this.total = response.total
-            this.list = response.list
-            this.listQuery.page = response.page
-            this.listQuery.limit = response.pageSize
+            fetchList(this.listQuery).then(content => {
+                this.list = content.data
+                this.total = content.meta.pagination.total
+            })
+        },
+        handleSizeChange(val) {
+            this.listQuery.pageSize = val
+            this.getList()
+        },
+        handleCurrentChange(val) {
+            this.listQuery.pageNum = val
+            this.getList()
+        },
+        handleDeletion(articleId) {
+            if (confirm('删除id为' + articleId + '的文章?')) {
+                deleteArticle(articleId).then(content => {
+                    alert('删除成功')
+                    this.getList()
+                })
+            }
         }
     }
 }

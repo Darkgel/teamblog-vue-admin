@@ -119,6 +119,8 @@ export default {
                     this.postForm.contentHtml = this.$refs.markdownEditor.getHtml()
                     this.postForm.status = articleStatus.published
                     saveArticle(this.postForm).then(content => {
+                        console.log(content)
+
                         this.$notify({
                             title: '成功',
                             message: '发布文章成功',
@@ -133,7 +135,7 @@ export default {
             })
         },
         saveAsDraft() {
-            if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
+            if (this.postForm.contentMd.length === 0 || this.postForm.title.length === 0) {
                 this.$message({
                     message: '请填写必要的标题和内容',
                     type: 'warning'
@@ -145,7 +147,7 @@ export default {
             saveArticle(this.postForm).then(content => {
                 this.$notify({
                     title: '成功',
-                    message: '发布文章成功',
+                    message: '保存草稿成功',
                     type: 'success',
                     duration: 2000
                 })

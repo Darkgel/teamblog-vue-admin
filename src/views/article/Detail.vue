@@ -25,6 +25,17 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
+                            <el-row>
+                                <el-col :span="20">
+                                    <el-form-item label-width="45px" label="标签:" class="postInfo-container-item">
+                                        <tagsInput
+                                            v-model="options"
+                                            labelStyle="primary"
+                                            unique
+                                            ref='tags'></tagsInput>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
                         </div>
                     </el-col>
                 </el-row>
@@ -47,6 +58,7 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import MDinput from '@/components/MDinput'
 import MarkdownEditor from '@/components/MarkdownEditor'
 import { getArticle, saveArticle } from '@/api/blog/articles'
+import TagsInput from './TagsInput'
 
 const articleStatus = {
     draft: 0,
@@ -64,7 +76,7 @@ const defaultForm = {
 }
 
 export default {
-    components: { Sticky, MDinput, MarkdownEditor },
+    components: { Sticky, MDinput, MarkdownEditor, TagsInput },
     props: {
         isEdit: {
             type: Boolean,
@@ -88,7 +100,8 @@ export default {
             postForm: Object.assign({}, defaultForm),
             rules: {
                 title: [{ validator: validateRequire }]
-            }
+            },
+            options: ['PHP', 'Javascript', 'Vue']
         }
     },
     computed: {

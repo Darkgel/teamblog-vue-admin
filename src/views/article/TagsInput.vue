@@ -1,38 +1,51 @@
 <template>
     <span class="tags-box">
-        <div class="form-control" :style="boxStyle" @click="blur">
-
-            <span :class="'bg-'+labelStyle+' label-'+labelStyle" :style="badgeStyle" v-for="(opt,index) in dataValue" :key="index">{{opt}}
-                <button type="button" class="close" aria-label="Close" :style="removeStyle" @click="remove(index)">
-                    <i aria-hidden="true">&times;</i>
-                </button>
-            </span>
-            <input
-            type="text"
-            :style="inputStyle"
-            :placeholder="placeholder"
-            :size="inputSize"
-            v-model.trim="currentValue"
-            @keyup="keyAction"
-            ref="tagsinput">
-
+        <div class="form-control">
+            <el-row>
+                <el-button round type="primary" size="mini" v-for="(tag,index) in value" :key="index">
+                    {{tag.name}}&nbsp;
+                    <i aria-hidden="true" @click="remove(index)">&times;</i>
+                </el-button>
+                <span v-if="value.length === 0">暂无标签</span>
+            </el-row>
+            <div id="tag-input-div">
+                <input class="add-tag-input"
+                    type="text"
+                    :placeholder="placeholder"
+                    v-model.trim="currentValue"
+                    @focus="focusAddTagInputHandler($event)"
+                    ref="addTagInput" />
+                <!-- <el-input v-model.trim="currentValue" :placeholder="placeholder" @keyup="keyAction" ref="tagsinput"/> -->
+                <div
+                    v-show="isShowSelect"
+                    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 102;"
+                    @click="cancelNewTagHandler">
+                </div>
+                <div v-show="isShowSelect" ref="selectNewTagDiv" class="select-new-tag-div">
+                    <ul id="select-new-tag-ul">
+                        <li v-for="(tag, index) in candidateTags" :key="index" @click="selectNewTagHandler(tag)" class="select-new-tag-li">{{tag.name}}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <input type="hidden" :value="value">
     </span>
 </template>
 
 <script>
+import { getSimilarTagsByTagName } from '@/api/blog/tags'
+
 export default {
     name: 'tagsInput',
     props: {
         /**
          * 绑定数据
-         * @type {String|Array}
-         * @required false
+         * @type {Array}
+         * @required true
          */
         value: {
-            type: null,
-            required: false
+            type: Array,
+            required: true
         },
         /**
          * 占位描述
@@ -42,185 +55,115 @@ export default {
         placeholder: {
             type: String,
             required: false,
-            default: 'Enter tag'
-        },
-        /**
-         * label 风格
-         * @type {String}
-         * @required false
-         */
-        labelStyle: {
-            type: String,
-            default: 'info',
-            required: false
-        },
-        /**
-         * 是否去重复
-         * @type {Boolean}
-         * @required false
-         */
-        unique: {
-            type: Boolean,
-            required: false,
-            default: false
+            default: '添加标签'
         }
     },
     data() {
         return {
-            tags: [],
+            candidateTags: [],
             currentValue: '',
-            modelType: 'array'
+            isShowSelect: false
         }
     },
-    computed: {
-        dataValue() {
-            if (typeof this.value === 'undefined') {
-                return this.tags
-            }
-            if (typeof this.value === 'string') {
-                return this.value === '' ? [] : this.value.split(',')
-            } else {
-                return this.value
-            }
-        },
-        boxStyle() {
-            return {
-                'padding': '4px 12px 0 12px',
-                'height': 'auto !important'
-            }
-        },
-        inputStyle() {
-            return {
-                'outline': 'none',
-                'border': '0!important',
-                'color': '#495057',
-                'height': '27px',
-                'margin-top': '3px'
-            }
-        },
-        badgeStyle() {
-            return {
-                'border-radius': '5px',
-                'padding': '5px 9px',
-                'margin-bottom': '5px',
-                'margin-right': '4px',
-                'display': 'inline-block',
-                'font-size': '12px',
-                'font-weight': '700',
-                'line-height': '1',
-                'color': 'black',
-                'vertical-align': 'middle'
-            }
-        },
-        removeStyle() {
-            return {
-                'font-size': '12px',
-                'margin-left': '10px',
-                'color': 'white'
-            }
-        },
-        inputSize() {
-            if (this.currentValue !== '') {
-                var reg = /[\u4e00-\u9fa5\uF900-\uFA2D]/
-                if (reg.test(this.currentValue)) {
-                    return this.currentValue.length * 2
-                } else {
-                    return this.currentValue.length
-                }
-            }
-            return typeof this.placeholder === 'undefined' ? 1 : this.placeholder.length
+    watch: {
+        currentValue: function(newCurrentValue, oldCurrentValue) {
+            this.renewCandidateTags(newCurrentValue, 10)
         }
     },
+    computed: {},
     methods: {
-        blur() {
-            this.$refs.tagsinput.focus()
+        remove(index) {
+            this.value.splice(index, 1)
         },
-        keyAction(event) {
-            if (this.currentValue === '' && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-                let current = event.target
-                if (event.key === 'ArrowLeft' && current.previousSibling !== null) {
-                    current.previousSibling.before(current)
-                } else if (event.key === 'ArrowLeft' && current.nextSibling !== null) {
-                    current.nextSibling.after(current)
+        renewCandidateTags(tagName, limit) {
+            let candidateTags = []
+            // 根据currentValue获取候选tag
+            getSimilarTagsByTagName(tagName, 10).then(content => {
+                candidateTags = content.data
+                // 添加“创建新标签”
+                let createNewTag = {
+                    id: -1,
+                    name: '创建新标签' + tagName
                 }
 
-                this.blur()
-                return false
-            }
-
-            if (event.key === 'Enter' || event.key === ',' || event.key === '，' || event.key === 'Meta') {
-                if (this.currentValue === '') {
-                    return false
-                }
-                this.setTags(this.currentValue)
+                candidateTags.push(createNewTag)
+                this.candidateTags = candidateTags
+            })
+        },
+        focusAddTagInputHandler(e) {
+            this.isShowSelect = true
+            this.renewCandidateTags(this.currentValue, 10)
+        },
+        cancelNewTagHandler() {
+            this.isShowSelect = false
+        },
+        selectNewTagHandler(tag) {
+            console.log('---------selectNewTagHandler--------')
+            if (tag.id === -1) {
+                // 创建新的tag
+                console.log('创建新的tag')
+            } else {
+                console.log('---------选中tag-------------')
+                this.value.push(tag)
+                this.isShowSelect = false
                 this.currentValue = ''
-            }
-        },
-        remove(inx) {
-            if (typeof this.value === 'undefined') {
-                this.tags.splice(inx, 1)
-            } else {
-                if (typeof this.value === 'string') {
-                    var tags = this.value.split(',')
-                    tags.splice(inx, 1)
-
-                    this.$emit('input', tags.join(','))
-                } else {
-                    this.value.splice(inx, 1)
-                }
-            }
-        },
-        setTags(tags) {
-            let tagsArr = (typeof tags === 'string') ? tags.split(/,|，/) : tags
-            tagsArr = tagsArr.filter(n => { return n })
-
-            if (typeof this.value === 'undefined') {
-                this.tags = this.unique ? Array.from(new Set(this.tags.concat(tagsArr))) : this.tags.concat(tagsArr)
-            } else {
-                let tmpTags = null
-                if (this.modelType === 'string') {
-                    tmpTags = this.value === null || this.value === '' ? tagsArr.join(',') : this.value + ',' + tagsArr.join(',')
-                    if (this.unique) {
-                        let tmpUnique = Array.from(new Set(tmpTags.split(',')))
-                        tmpTags = tmpUnique.join(',')
-                    }
-                } else {
-                    tmpTags = this.unique ? Array.from(new Set(this.value.concat(tagsArr))) : this.value.concat(tagsArr)
-                }
-                this.$emit('input', tmpTags)
-            }
-        },
-        getTags(mode = 'array') {
-            if (typeof this.value === 'undefined') {
-                return mode === 'array' ? this.tags : this.tags.join(',')
-            } else {
-                let tags = ''
-                if (mode === 'array') {
-                    tags = typeof this.value === 'string' ? this.value.split(',') : this.value
-                } else {
-                    tags = typeof this.value === 'string' ? this.value : this.value.join(',')
-                }
-
-                return tags
-            }
-        },
-        clearTags() {
-            this.tags = []
-            if (this.modelType === 'string') {
-                this.$emit('input', null)
-            } else {
-                this.$emit('input', [])
-            }
-        }
-    },
-    created() {
-        if (typeof this.value !== 'undefined') {
-            if (typeof this.value === 'string') {
-                this.modelType = 'string'
-            } else {
-                this.modelType = 'array'
+                console.log(this.value)
             }
         }
     }
 }
 </script>
+
+<style scoped>
+.add-tag-input {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    line-height: 40px;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+
+}
+
+#tag-input-div {
+    position: relative;
+}
+
+.select-new-tag-div {
+    position: absolute;
+    overflow: auto;
+    z-index: 100;
+    width: 110%;
+    height: 200px;
+    border: 1px solid #ddd;
+    line-height: normal;
+    z-index: 204;
+    background: white;
+    scroll-behavior: smooth;
+}
+
+.select-new-tag-li {
+    padding: 3% 0;
+    margin: 1% 1%;
+    list-style: none;
+}
+
+.select-new-tag-li:hover {
+    cursor: pointer;
+    background: #D3D3D3;
+}
+
+#select-new-tag-ul {
+    margin: 0 0;
+    padding: 0 0;
+}
+</style>

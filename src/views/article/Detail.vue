@@ -29,9 +29,7 @@
                                 <el-col :span="20">
                                     <el-form-item label-width="45px" label="标签:" class="postInfo-container-item">
                                         <tagsInput
-                                            v-model="options"
-                                            labelStyle="primary"
-                                            unique
+                                            v-model="tags"
                                             ref='tags'></tagsInput>
                                     </el-form-item>
                                 </el-col>
@@ -101,7 +99,16 @@ export default {
             rules: {
                 title: [{ validator: validateRequire }]
             },
-            options: ['PHP', 'Javascript', 'Vue']
+            tags: [
+                {
+                    id: 25,
+                    name: 'ea'
+                },
+                {
+                    id: 30,
+                    name: 'placeat'
+                }
+            ]
         }
     },
     computed: {

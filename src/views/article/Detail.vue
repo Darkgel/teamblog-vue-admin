@@ -148,6 +148,10 @@ export default {
                             type: 'success',
                             duration: 2000
                         })
+
+                        if (!this.isEdit) {
+                            this.$router.push({ name: 'Article.Edit', params: { id: content.data.id } })
+                        }
                     })
                 } else {
                     console.log('error submit!!')
@@ -174,6 +178,10 @@ export default {
                     type: 'success',
                     duration: 2000
                 })
+
+                if (!this.isEdit) {
+                    this.$router.push({ name: 'Article.Edit', params: { id: content.data.id } })
+                }
             })
         },
         getTagIdsAsString() {

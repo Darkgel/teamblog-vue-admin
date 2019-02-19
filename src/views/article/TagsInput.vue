@@ -28,12 +28,31 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" :value="value">
+
+        <el-dialog title="创建新的标签" :visible.sync="createNewTagDialogVisible">
+            <el-form :model="createNewTagForm">
+                <el-form-item label="标签名">
+                    <el-input v-model="createNewTagForm.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="标签描述">
+                    <el-input
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 4}"
+                        placeholder="请输入标签描述"
+                        v-model="createNewTagForm.description">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="createNewTagDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="createNewTagHandler()">确 定</el-button>
+            </div>
+        </el-dialog>
     </span>
 </template>
 
 <script>
-import { getSimilarTagsByTagName } from '@/api/blog/tags'
+import { getSimilarTagsByTagName, createTag } from '@/api/blog/tags'
 
 export default {
     name: 'tagsInput',
@@ -55,14 +74,19 @@ export default {
         placeholder: {
             type: String,
             required: false,
-            default: '添加标签'
+            default: '输入标签名以添加'
         }
     },
     data() {
         return {
             candidateTags: [],
             currentValue: '',
-            isShowSelect: false
+            isShowSelect: false,
+            createNewTagForm: {
+                name: '',
+                description: ''
+            },
+            createNewTagDialogVisible: false
         }
     },
     watch: {
@@ -83,7 +107,7 @@ export default {
                 // 添加“创建新标签”
                 let createNewTag = {
                     id: -1,
-                    name: '创建新标签' + tagName
+                    name: '创建新标签:' + tagName
                 }
 
                 candidateTags.push(createNewTag)
@@ -98,17 +122,23 @@ export default {
             this.isShowSelect = false
         },
         selectNewTagHandler(tag) {
-            console.log('---------selectNewTagHandler--------')
             if (tag.id === -1) {
                 // 创建新的tag
-                console.log('创建新的tag')
+                this.createNewTagForm.name = tag.name.substring(6)
+                this.createNewTagDialogVisible = true
             } else {
-                console.log('---------选中tag-------------')
                 this.value.push(tag)
                 this.isShowSelect = false
                 this.currentValue = ''
-                console.log(this.value)
             }
+        },
+        createNewTagHandler() {
+            createTag(this.createNewTagForm).then(content => {
+                this.value.push(content.data)
+                this.createNewTagDialogVisible = false
+                this.currentValue = ''
+                this.isShowSelect = false
+            })
         }
     }
 }

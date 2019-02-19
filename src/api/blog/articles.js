@@ -15,10 +15,11 @@ export function deleteArticle(articleId) {
     })
 }
 
-export function getArticle(articleId) {
+export function getArticle(articleId, query) {
     return request({
         url: '/blog/articles/' + articleId,
-        method: 'get'
+        method: 'get',
+        params: query
     })
 }
 

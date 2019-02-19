@@ -70,6 +70,7 @@ const defaultForm = {
     summary: '',
     contentMd: '',
     contentHtml: '',
+    tags: '',
     status: articleStatus.draft
 }
 
@@ -99,16 +100,7 @@ export default {
             rules: {
                 title: [{ validator: validateRequire }]
             },
-            tags: [
-                {
-                    id: 25,
-                    name: 'ea'
-                },
-                {
-                    id: 30,
-                    name: 'placeat'
-                }
-            ]
+            tags: []
         }
     },
     computed: {
@@ -126,11 +118,16 @@ export default {
     },
     methods: {
         fetchData(id) {
-            getArticle(id).then(content => {
+            let query = {
+                include: 'tags'
+            }
+            getArticle(id, query).then(content => {
                 let article = content.data
                 for (let key in this.postForm) {
                     this.postForm[key] = article[key]
                 }
+
+                this.tags = article.tags.data
             })
         },
         publish() {
@@ -138,6 +135,10 @@ export default {
                 if (valid) {
                     this.postForm.contentHtml = this.$refs.markdownEditor.getHtml()
                     this.postForm.status = articleStatus.published
+
+                    // 处理标签
+                    this.postForm.tags = this.getTagIdsAsString()
+
                     saveArticle(this.postForm).then(content => {
                         console.log(content)
 
@@ -164,6 +165,8 @@ export default {
             }
             this.postForm.contentHtml = this.$refs.markdownEditor.getHtml()
             this.postForm.status = articleStatus.draft
+            // 处理标签
+            this.postForm.tags = this.getTagIdsAsString()
             saveArticle(this.postForm).then(content => {
                 this.$notify({
                     title: '成功',
@@ -172,6 +175,14 @@ export default {
                     duration: 2000
                 })
             })
+        },
+        getTagIdsAsString() {
+            let tagIdArray = []
+            let len = this.tags.length
+            for (let i = 0; i < len; i++) {
+                tagIdArray.push(this.tags[i].id)
+            }
+            return tagIdArray.join(',')
         }
     }
 }

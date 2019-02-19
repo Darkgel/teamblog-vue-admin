@@ -7,3 +7,11 @@ export function getSimilarTagsByTagName(similarName, limit) {
         params: {limit: limit}
     })
 }
+
+export function createTag(tag) {
+    return request({
+        url: 'blog/tags/',
+        method: 'post',
+        data: tag
+    })
+}

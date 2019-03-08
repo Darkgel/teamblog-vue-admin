@@ -1,6 +1,6 @@
-import request from '@/utils/request'
+import request from '@/utils/httpClient'
 
-export function fetchList(query) {
+export function getArticleList(query) {
     return request({
         url: '/blog/articles',
         method: 'get',

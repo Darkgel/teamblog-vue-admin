@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/httpClient'
 
 export function getSimilarTagsByTagName(similarName, limit) {
     return request({

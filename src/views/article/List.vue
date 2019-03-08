@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { fetchList, deleteArticle } from '@/api/blog/articles'
+import { getArticleList, deleteArticle } from '@/api/blog/articles'
 import Pagination from '@/components/Pagination'
 const articleStatus = {
     draft: 0,
@@ -93,8 +93,7 @@ export default {
             total: 0,
             listQuery: {
                 pageNum: 1,
-                pageSize: 10,
-                withDeleted: 1
+                pageSize: 10
             },
             constant: {
                 articleStatus: {
@@ -109,9 +108,9 @@ export default {
     },
     methods: {
         getList() {
-            fetchList(this.listQuery).then(response => {
-                this.list = response.data
-                this.total = response.meta.pagination.total
+            getArticleList(this.listQuery).then(response => {
+                this.list = response.content.data
+                this.total = response.content.meta.pagination.total
             })
         },
         handleSizeChange(val) {

@@ -121,8 +121,8 @@ export default {
             let query = {
                 include: 'tags'
             }
-            getArticle(id, query).then(content => {
-                let article = content.data
+            getArticle(id, query).then(response => {
+                let article = response.content.data
                 for (let key in this.postForm) {
                     this.postForm[key] = article[key]
                 }
@@ -139,8 +139,9 @@ export default {
                     // 处理标签
                     this.postForm.tags = this.getTagIdsAsString()
 
-                    saveArticle(this.postForm).then(content => {
-                        console.log(content)
+                    saveArticle(this.postForm).then(response => {
+                        let data = response.content.data
+                        console.log(response)
 
                         this.$notify({
                             title: '成功',
@@ -150,7 +151,7 @@ export default {
                         })
 
                         if (!this.isEdit) {
-                            this.$router.push({ name: 'Article.Edit', params: { id: content.data.id } })
+                            this.$router.push({ name: 'Article.Edit', params: { id: data.id } })
                         }
                     })
                 } else {
@@ -171,7 +172,7 @@ export default {
             this.postForm.status = articleStatus.draft
             // 处理标签
             this.postForm.tags = this.getTagIdsAsString()
-            saveArticle(this.postForm).then(content => {
+            saveArticle(this.postForm).then(response => {
                 this.$notify({
                     title: '成功',
                     message: '保存草稿成功',
@@ -180,7 +181,7 @@ export default {
                 })
 
                 if (!this.isEdit) {
-                    this.$router.push({ name: 'Article.Edit', params: { id: content.data.id } })
+                    this.$router.push({ name: 'Article.Edit', params: { id: response.content.data.id } })
                 }
             })
         },

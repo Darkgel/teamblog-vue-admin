@@ -102,8 +102,8 @@ export default {
         renewCandidateTags(tagName, limit) {
             let candidateTags = []
             // 根据currentValue获取候选tag
-            getSimilarTagsByTagName(tagName, 10).then(content => {
-                candidateTags = content.data
+            getSimilarTagsByTagName(tagName, 10).then(response => {
+                candidateTags = response.content.data
                 // 添加“创建新标签”
                 let createNewTag = {
                     id: -1,
@@ -133,8 +133,8 @@ export default {
             }
         },
         createNewTagHandler() {
-            createTag(this.createNewTagForm).then(content => {
-                this.value.push(content.data)
+            createTag(this.createNewTagForm).then(response => {
+                this.value.push(response.content.data)
                 this.createNewTagDialogVisible = false
                 this.currentValue = ''
                 this.isShowSelect = false

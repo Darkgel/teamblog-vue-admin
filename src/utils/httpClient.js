@@ -109,6 +109,12 @@ service.interceptors.response.use(
             // 请求accessToken后重试
             config.tryAccessToken = true
 
+            Message({
+                message: '重新请求access token中，请稍后',
+                type: 'info',
+                duration: 5 * 1000
+            })
+
             return renewAccessToken()
                 .then(accessToken => {
                     console.log('---------------after renew access token---------------------')

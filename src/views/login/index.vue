@@ -27,29 +27,27 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-
 export default {
     name: 'Login',
     data() {
         const validateUsername = (rule, value, callback) => {
-            if (!validUsername(value)) {
+            if (value.length < 3) {
                 callback(new Error('Please enter the correct user name'))
             } else {
                 callback()
             }
         }
         const validatePassword = (rule, value, callback) => {
-            if (value.length < 6) {
-                callback(new Error('The password can not be less than 6 digits'))
+            if (value.length < 3) {
+                callback(new Error('The password can not be less than 3 digits'))
             } else {
                 callback()
             }
         }
         return {
             loginForm: {
-                username: 'admin',
-                password: '1111111'
+                username: '',
+                password: ''
             },
             loginRules: {
                 username: [{
@@ -79,30 +77,18 @@ export default {
             immediate: true
         }
     },
-    created() {
-        // window.addEventListener('hashchange', this.afterQRScan)
-    },
-    destroyed() {
-        // window.removeEventListener('hashchange', this.afterQRScan)
-    },
     methods: {
-        showPwd() {
-            if (this.passwordType === 'password') {
-                this.passwordType = ''
-            } else {
-                this.passwordType = 'password'
-            }
-        },
         handleLogin() {
             this.$refs.loginForm.validate(valid => {
                 if (valid) {
                     this.loading = true
-                    this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+                    this.$store.dispatch('loginByUsername', this.loginForm).then(() => {
                         this.loading = false
                         this.$router.push({
                             path: this.redirect || '/'
                         })
                     }).catch(() => {
+                        alert('用户名或密码错误')
                         this.loading = false
                     })
                 } else {

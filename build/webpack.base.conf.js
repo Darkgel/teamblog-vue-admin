@@ -4,17 +4,19 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
+// 解析到项目根目录下
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
 
+// eslint-loader配置
 const createLintingRule = () => ({
     test: /\.(js|vue)$/,
     loader: 'eslint-loader',
     enforce: 'pre',
     include: [resolve('src'), resolve('test')],
     options: {
-        formatter: require('eslint-friendly-formatter'),
+        formatter: require('eslint-friendly-formatter'),// 指定错误报告的格式规范
         emitWarning: !config.dev.showEslintErrorsInOverlay
     }
 })

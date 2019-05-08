@@ -5,8 +5,8 @@ const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin') // Copies individual files or entire directories to the build directory.
+const HtmlWebpackPlugin = require('html-webpack-plugin') // Plugin that simplifies creation of HTML files to serve your bundles
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
@@ -66,7 +66,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }),
         // copy custom static assets
         new CopyWebpackPlugin([{
-            from: path.resolve(__dirname, '../static'),
+            from: path.resolve(__dirname, '../static'),// 将根目录下的static中的文件复制到dist的相应目录下
             to: config.dev.assetsSubDirectory,
             ignore: ['.*']
         }])

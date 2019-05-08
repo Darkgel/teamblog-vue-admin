@@ -1,3 +1,7 @@
+/**
+ * vue-loader 中的 options 配置
+ */
+
 'use strict'
 const utils = require('./utils')
 const config = require('../config')

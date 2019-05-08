@@ -26,7 +26,12 @@ export const constantRouterMap = [
         meta: { noLogin: true }
     },
 
-    { path: '/404', component: () => import('@/views/404'), hidden: true },
+    {
+        name: '404',
+        path: '/404',
+        component: () => import('@/views/404'),
+        hidden: true
+    },
 
     {
         path: '/',
